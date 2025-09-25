@@ -1,4 +1,3 @@
-require('dotenv').config();
 const express = require('express');
 const sequelize = require('./db');
 const Ola = require('./models/ola');
@@ -6,20 +5,15 @@ const Ola = require('./models/ola');
 const app = express();
 app.use(express.json());
 
-// Conexión a la base de datos
+// Conexión a PostgreSQL
 sequelize.authenticate()
   .then(() => console.log("¡Conectado a PostgreSQL!"))
   .catch(err => console.error("Error de conexión:", err));
 
-// Ruta raíz
-app.get('/', (req, res) => {
-  res.send('Servidor Express funcionando');
-});
-
-// Ruta para obtener todos los registros de la tabla ola
+// Ruta GET para todos los registros
 app.get('/ola', async (req, res) => {
   try {
-    const registros = await ola.findAll();
+    const registros = await Ola.findAll();
     res.json(registros);
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener los registros' });
