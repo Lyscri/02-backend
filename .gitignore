@@ -1,6 +1,27 @@
-# Archivos de entorno
+# -----------------------------------
+# Archivos de Entorno y Configuraciones Sensibles
+# -----------------------------------
+
+# Archivo con variables de entorno (claves de DB, secretos, etc.)
 .env
 
-# Dependencias de Node
+# Archivos de logs y bases de datos locales (si usas SQLite, etc.)
+*.log
+*.sqlite
+*.db
+
+# Archivos de IDEs (Editores de código)
+.vscode
+.idea
+
+# -----------------------------------
+# Dependencias y Builds
+# -----------------------------------
+
+# Carpeta de módulos (dependencias de NPM)
 /node_modules
-/package-lock.json
+
+# Archivos de lock de paquetes
+package-lock.json
+npm-debug.log
+yarn-error.log
