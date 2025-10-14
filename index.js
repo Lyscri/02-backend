@@ -1,33 +1,56 @@
-require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const sequelize = require('./db');
-const Ola = require('./models/ola');
+const Usuario = require('./models/usuarioModels');
+
+require('dotenv').config();
 
 const app = express();
 app.use(express.json());
+app.use(cors()); 
+app.use(express.json());
 
-// Conexión a la base de datos
 sequelize.authenticate()
-  .then(() => console.log("¡Conectado a PostgreSQL!"))
-  .catch(err => console.error("Error de conexión:", err));
+  .then(() => console.log("✅ ¡Conectado a PostgreSQL!"))
+  .catch(err => console.error("❌ Error de conexión:", err));
+  
+  sequelize.sync() .then(() => console.log("✅ Modelos sincronizados: ¡Tablas creadas/verificadas!"))
+  .catch(err => console.error("❌ Error al sincronizar modelos:", err));
 
-// Ruta raíz
-app.get('/', (req, res) => {
-  res.send('Servidor Express funcionando');
+app.get('/', async (req,res) => {
+ console.log("conectado correctamente")
+ res.send("Funcionaaaaaaaa")
+})
+app.get('/Usuario', async (req,res)=> {
+try {
+ const usuarios = await Usuario.findAll(); 
+ res.json(usuarios); 
+} catch (error) {
+ console.error("Error al obtener usuarios:", error);
+ res.status(500).json({ error: "Error al consultar la base de datos" });
+}
 });
 
-// Ruta para obtener todos los registros de la tabla ola
-app.get('/ola', async (req, res) => {
-  try {
-    const registros = await ola.findAll();
-    res.json(registros);
-  } catch (error) {
-    res.status(500).json({ error: 'Error al obtener los registros' });
-  }
+app.post('/Usuario', async (req, res) => {
+    try {
+        const { usuario, password } = req.body;
+        if (!usuario || !password) {
+            return res.status(400).json({ error: "Faltan campos obligatorios: 'usuario' y 'password'" });
+        }
+        const nuevoUsuario = await Usuario.create({
+            usuario: usuario,
+            password: password 
+        });
+        res.status(201).json(nuevoUsuario);
+    } catch (error) {
+        console.error("Error al crear el usuario:", error);
+        res.status(500).json({ error: "Error al intentar registrar el usuario en la base de datos." });
+    }
 });
 
-// Puerto
+
+// Este es mi puerto declarado
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
 });

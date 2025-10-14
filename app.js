@@ -1,27 +1,27 @@
 const express = require('express');
 const sequelize = require('./db');
-const Ola = require('./models/ola');
+const Usuario = require('./models/usuarioModels');
+require('dotenv').config();
 
 const app = express();
 app.use(express.json());
 
-// Conexión a PostgreSQL
 sequelize.authenticate()
-  .then(() => console.log("¡Conectado a PostgreSQL!"))
-  .catch(err => console.error("Error de conexión:", err));
+  .then(() => console.log("✅ ¡Conectado a PostgreSQL!"))
+  .catch(err => console.error("❌ Error de conexión:", err.message));
 
-// Ruta GET para todos los registros
-app.get('/ola', async (req, res) => {
-  try {
-    const registros = await Ola.findAll();
-    res.json(registros);
-  } catch (error) {
-    res.status(500).json({ error: 'Error al obtener los registros' });
-  }
+app.get('/', async (req, res) => {
+ console.log("Servidor Express conectado correctamente");
+ res.send("🚀 Servidor Express.js en funcionamiento. Usa /empleados para ver los datos.");
 });
 
-// Puerto
+app.get('/Usuario', async (req,res)=> {
+  const Usuario = await Usuario.findAll();
+  res.json(usuario)
+})
+
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`📡 Servidor corriendo en http://localhost:${PORT}`);
 });
